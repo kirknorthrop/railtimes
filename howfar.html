@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Railtim.es</title>
+		<!-- Bootstrap -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+		<link rel="stylesheet" type="text/css" href="http://tubetim.es/static/railtimes.css">
+		<link rel="stylesheet" type="text/css" href="http://tubetim.es/static/fonts/receipt/MyFontsWebfontsKit.css">
+
+		<!-- Leaflet -->
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+		<!--[if lte IE 8]>
+		    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+		<![endif]-->
+		<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+		<style type="text/css">
+			#map {
+				height: 600px;
+			}
+			a:after {
+				content: "";
+			}
+		</style>
+
+
+		<!-- Random Icons -->
+		<link rel="shortcut icon" href="/static/favicon.ico">
+		<link rel="apple-touch-icon" href="/static/apple-touch-iphone.png" />
+		<link rel="apple-touch-icon" sizes="72x72" href="/static/apple-touch-ipad.png" />
+		<link rel="apple-touch-icon" sizes="114x114" href="/static/apple-touch-retina-iphone.png" />
+		<link rel="apple-touch-icon" sizes="144x144" href="/static/apple-touch-retina-ipad.png" />
+	</head>
+	<body>
+		
+
+
+
+
+
+
+
+
+		<div class="header">
+			<h1>
+				<img src="http://tubetim.es/static/train.png" style="vertical-align: 0 !important;"> railtimes
+			</h1>
+			<div class="nti">Train Times without the nonsense</div>
+		</div>
+
+		<div class="container">
+			<h1 class="flipsign">
+				Steve's thing
+			</h1>
+
+			<div id="map"></div>
+
+
+
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Location</th>
+						<th>Time</th> 
+						<th>Lat</th>
+						<th>Lon</th>
+					</tr>
+				</thead>
+				<tbody>
+					% for point in endpoints:
+						<tr>
+							<td>${point['station']}</td>
+							<td>${point['time']}</td>
+							<td>${point['lat']}</td>
+							<td>${point['lon']}</td>
+
+						</tr>
+					% endfor
+				</tbody>
+			</table>
+		</div>
+			<script src="http://code.jquery.com/jquery-latest.js"></script>
+			<script src="http://railtim.es/test/bootstrap/js/bootstrap.min.js"></script>
+			<script>
+				var map = L.map('map').setView([51.505, -0.09], 13);
+				L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', { 
+						attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">',
+	    				maxZoom: 18,
+	    				subdomains: '1234'
+				}).addTo(map);
+				var bounds = [];
+				% for point in endpoints:
+					var marker = L.marker([${point['lat']}, ${point['lon']}]).addTo(map);
+					marker.bindPopup("${point['station']} at ${point['time']}");
+					bounds.push([${point['lat']}, ${point['lon']}]);
+				% endfor
+
+				map.fitBounds(bounds);
+			</script>
+		</body>
+</html>

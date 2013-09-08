@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Railtim.es</title>
+		<!-- Bootstrap -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+		<link rel="stylesheet" type="text/css" href="http://tubetim.es/static/railtimes.css">
+		<link rel="stylesheet" type="text/css" href="http://tubetim.es/static/fonts/receipt/MyFontsWebfontsKit.css">
+
+		<!-- Random Icons -->
+		<link rel="shortcut icon" href="/static/favicon.ico">
+		<link rel="apple-touch-icon" href="/static/apple-touch-iphone.png" />
+		<link rel="apple-touch-icon" sizes="72x72" href="/static/apple-touch-ipad.png" />
+		<link rel="apple-touch-icon" sizes="114x114" href="/static/apple-touch-retina-iphone.png" />
+		<link rel="apple-touch-icon" sizes="144x144" href="/static/apple-touch-retina-ipad.png" />
+	</head>
+	<body>
+		<div class="header">
+			<h1>
+				<img src="http://tubetim.es/static/train.png" style="vertical-align: 0 !important;"> railtimes
+			</h1>
+			<div class="nti">UK Train Times without all the nonsense</div>
+		</div>
+
+
+
+		<div class="container">
+			<h1 class="flipsign">
+				${station.tps_description}
+			</h1>
+
+		
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Origin</th>
+						<th>Destination</th>
+						<th>Arrival</th>
+						<th>Pass</th>
+						<th>Departure</th>
+						<th>Platform</th>
+						<th>Line</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					% for train in trains:
+						<tr>
+							<td>${train['start'].tiploc.tps_description}</td>
+							<td>${train['end'].tiploc.tps_description}</td>
+							<td>${train['location'].arrival}</td>
+							<td>${train['location'].pass_time}</td>
+							<td>${train['location'].departure}</td>
+							<td>${train['location'].platform}</td>
+							<td>${train['location'].line}</td>
+							<td><a href="/train/${train['location'].train_uid}/">View train</a></td>
+						</tr>
+					% endfor
+				</tbody>
+			</table>
+		</div>
+			<script src="http://code.jquery.com/jquery-latest.js"></script>
+			<script src="http://railtim.es/test/bootstrap/js/bootstrap.min.js"></script>
+		</body>
+</html>
