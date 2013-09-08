@@ -22,8 +22,8 @@ Session = sessionmaker(bind=engine)
 session = Session()
 #Base.metadata.create_all(engine) 
 
-cherrypy.config.update({'server.socket_host': '127.0.0.1',
-						'server.socket_port': 8088,
+cherrypy.config.update({'server.socket_host': '0.0.0.0',
+						'server.socket_port': 8080,
 					   })
 
 
@@ -88,7 +88,7 @@ class HelloWorld(object):
 		elif train.filter_by(stp_indicator = 'P').count():
 			train = train.filter_by(stp_indicator = 'P').all()
 
-		return Template(open('/srv/railtim.es/new/train.html', 'r').read()).render(train = train, all_points = all_points, all_times = all_times)
+		return Template(open('train.html', 'r').read()).render(train = train, all_points = all_points, all_times = all_times)
 
 
 
@@ -159,7 +159,7 @@ class HelloWorld(object):
 				this_val["lon"] = tiploc_lat_lon[stanox_list[item][0].tiploc][1]
 				ret_val.append(this_val)
 		
-		return Template(open('/srv/railtim.es/new/steve.html', 'r').read()).render(endpoints = ret_val)
+		return Template(open('steve.html', 'r').read()).render(endpoints = ret_val)
 
 
 
@@ -267,7 +267,8 @@ class HelloWorld(object):
 							).all()
 
 		# trains_to_render = []
-		# for loc in locations:
+
+
 		# 	train = {}
 		# 	train['location'] = loc
 		# 	train['start'] = session.query(Location).filter_by(schedule = loc.schedule).filter_by(type = 'LO').first()

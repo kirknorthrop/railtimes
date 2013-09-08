@@ -24,11 +24,9 @@
 			<div class="nti">UK Train Times without all the nonsense</div>
 		</div>
 
-
-
 		<div class="container">
 			<h1 class="flipsign">
-				${station.tps_description}
+				station.tps_description
 			</h1>
 
 		
@@ -48,14 +46,14 @@
 				<tbody>
 					% for train in trains:
 						<tr>
-							<td>${train['start'].tiploc.tps_description}</td>
-							<td>${train['end'].tiploc.tps_description}</td>
-							<td>${train['location'].arrival}</td>
-							<td>${train['location'].pass_time}</td>
-							<td>${train['location'].departure}</td>
-							<td>${train['location'].platform}</td>
-							<td>${train['location'].line}</td>
-							<td><a href="/train/${train['location'].train_uid}/">View train</a></td>
+							<td>${train.origin.tps_description}</td>
+							<td>${train.destination.tps_description}</td>
+							<td>${train.arrival}</td>
+							<td>${train.pass_time}</td>
+							<td>${train.departure}</td>
+							<td>${train.platform}</td>
+							<td>${train.line}</td>
+							<td><a href="/train/${train.train_uid}/">View train</a></td>
 						</tr>
 					% endfor
 				</tbody>
