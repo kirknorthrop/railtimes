@@ -1,4 +1,4 @@
-from model import Base, Association, Location, Location2, Tiploc
+from model import Base, Association, Location, Tiploc
 from sqlalchemy import create_engine, not_
 from sqlalchemy.orm import sessionmaker
 import json
@@ -253,17 +253,17 @@ class HelloWorld(object):
 		runs = {runs_day: True}
 
 		locations = session.query(
-								Location2
+								Location
 							).filter(
-								Location2.tiploc_id.in_([t.tiploc for t in tiplocs])
+								Location.tiploc_id.in_([t.tiploc for t in tiplocs])
 							).filter(
-								Location2.sort_time.between(start_time, end_time)
+								Location.sort_time.between(start_time, end_time)
 							).filter(
-								Location2.start_date <= date, Location2.end_date >= date
+								Location.start_date <= date, Location.end_date >= date
 							).filter_by(
 								**runs
 							).order_by(
-								Location2.sort_time
+								Location.sort_time
 							).all()
 
 		# trains_to_render = []
