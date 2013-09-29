@@ -316,7 +316,83 @@ class HelloWorld(object):
 			return json.dumps(locations, cls=DateHandler)
 
 
+	# Takes either a STANOX or a TIPLOC. Will merge all under the STANOX.
+	# If you just want location, use location! 
+	@cherrypy.expose
+	def pebble(self):#, stanox, start_time = None, end_time = None, date = None, format = None):
 
+		# Cheating
+		stanox = 'HYWRDSH'
+		start_time = None
+		date = None
+
+		# At the moment we just do the next train. If no times were provided, we do 45 mins either side of present.
+		if start_time is None:
+			start_time = datetime.now()# - timedelta(minutes=45)
+			start_time = start_time.strftime("%H:%M")
+		# if end_time is None:
+		# 	end_time = datetime.now() + timedelta(minutes=45)
+		# 	end_time = end_time.strftime("%H:%M")
+		if date is None:
+			date = datetime.now().strftime("%Y-%m-%d")
+
+		
+		
+
+
+		# If it's a TIPLOC, we need to convert to a STANOX
+		if not stanox.isdigit():
+			stanox = tiploc_list[stanox].stanox
+		
+		# Get all the TIPLOCs for that STANOX
+		tiplocs = stanox_list[stanox]
+
+		runs_day = 'runs_' + datetime.strptime(date, "%Y-%m-%d").strftime('%A').lower()[0:2]
+		runs = {runs_day: True}
+
+		locations = session.query(
+								Location
+							).filter(
+								Location.tiploc_id.in_([t.tiploc for t in tiplocs])
+							).filter(
+								Location.sort_time >= start_time#, end_time)
+							).filter(
+								Location.start_date <= date, Location.end_date >= date
+							).filter_by(
+								**runs
+							).order_by(
+								Location.sort_time
+							).first()#all()
+
+		# trains_to_render = []
+
+
+		# 	train = {}
+		# 	train['location'] = loc
+		# 	train['start'] = session.query(Location).filter_by(schedule = loc.schedule).filter_by(type = 'LO').first()
+		# 	train['end'] = session.query(Location).filter_by(schedule = loc.schedule).filter_by(type = 'LT').first()
+		# 	trains_to_render.append(train)
+
+		# for tiploc in tiplocs:
+		# 	if tiploc.short_description is not None:
+		# 		station = tiploc
+		# 		break
+
+		print locations
+
+		# {"origin": null, "tiploc": null, "public_arrival": null, "runs_mo": false, "origin_id": "BRGHTN", "reservations": "S", "train_category": "OO", "power_type": "EMU", "train_identity": "2A53", 
+		# "runs_fr": false, "operating_characteristics": null, "train_class": "B", "speed": "100", "id": 3411156, "public_departure": null, "pathing_allowance": 0, "destination": null, "service_branding": null, 
+		# "runs_su": true, "headcode": null, "platform": "4", "runs_we": false, "start_date": null, "runs_sa": false, "tiploc_instance": null, "sleepers": null, "arrival": null, "timing_load": null, "end_date": null, 
+		# "schedule": 205911, "tiploc_id": "HYWRDSH", "activity": "T", "train_service_code": "24664004", "performance_allowance": 0, "stp_indicator": "P", "portion_id": null, "destination_id": "VICTRIC", "path": null, 
+		# "line": null, "train_uid": "W70419", "type": "LI", "train_status": "P", "runs_tu": false, "catering_code": null, "departure": null, "bank_holiday_running": null, "runs_th": false, "engineering_allowance": 0, 
+		# "pass_time": null, "sort_time": null, "order": 7}
+
+		print locations.sort_time
+
+		ret_val = {'1': locations.train_uid, '2': locations.sort_time.strftime('%H:%M')}
+
+		cherrypy.response.headers['Content-Type']= 'text/json'	
+		return json.dumps(ret_val, cls=DateHandler)
 
 #Daemonizer(cherrypy.engine).subscribe()
 
