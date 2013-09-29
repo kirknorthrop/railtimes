@@ -328,7 +328,8 @@ class HelloWorld(object):
 
 		# At the moment we just do the next train. If no times were provided, we do 45 mins either side of present.
 		if start_time is None:
-			start_time = datetime.now()# - timedelta(minutes=45)
+			# The timedelta here is just to fudge over DST.
+			start_time = datetime.now() + timedelta(hours=1) # - timedelta(minutes=45)
 			start_time = start_time.strftime("%H:%M")
 		# if end_time is None:
 		# 	end_time = datetime.now() + timedelta(minutes=45)
@@ -389,7 +390,7 @@ class HelloWorld(object):
 
 		print locations.sort_time
 
-		ret_val = {'1': locations.train_uid, '2': locations.sort_time.strftime('%H:%M')}
+		ret_val = {'1': locations.destination.short_description, '2': locations.sort_time.strftime('%H:%M')}
 
 		cherrypy.response.headers['Content-Type']= 'text/json'	
 		return json.dumps(ret_val, cls=DateHandler)
