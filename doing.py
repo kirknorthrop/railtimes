@@ -390,7 +390,18 @@ class HelloWorld(object):
 
 		print locations.sort_time
 
-		ret_val = {'1': locations.destination.short_description + '\n', '2': locations.sort_time.strftime('%H:%M')}
+		# Get all the TIPLOCs for that STANOX
+		stanox = tiploc_list[locations.destination_id].stanox
+		tiplocs = stanox_list[stanox]
+		for tiploc in tiplocs:
+			if tiploc.short_description is not None:
+				station = tiploc
+				break
+
+
+
+
+		ret_val = {'1': station.short_description + '\n', '2': locations.sort_time.strftime('%H:%M')}
 
 		cherrypy.response.headers['Content-Type']= 'text/json'	
 		return json.dumps(ret_val, cls=DateHandler)
