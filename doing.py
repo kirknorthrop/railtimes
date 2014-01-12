@@ -400,8 +400,8 @@ class HelloWorld(object):
 
 
 
-
-		ret_val = {'1': station.short_description + '\n', '2': locations.sort_time.strftime('%H:%M')}
+		# 1 = Destination, 2 = Planned Time, 3 = Expected Time, 4 = Platform
+		ret_val = {'1': station.short_description + '\n', '2': locations.sort_time.strftime('%H:%M'), '3': locations.sort_time.strftime('%H:%M'), '2': str(locations.platform)}
 
 		cherrypy.response.headers['Content-Type']= 'text/json'	
 		return json.dumps(ret_val, cls=DateHandler)
