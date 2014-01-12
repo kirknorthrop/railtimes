@@ -1,4 +1,4 @@
-from model import Base, Association, Location, Tiploc
+from model import Base, Agency, Calendar, Link, Route, StopTime, Stop, Transfer, Trip
 from sqlalchemy import create_engine, not_
 from sqlalchemy.orm import sessionmaker
 import json
@@ -61,25 +61,25 @@ cherrypy.config.update({'server.socket_host': '0.0.0.0',
 
 
 # Get tiploc lists
-tiplocs = session.query(Tiploc).all()
+# tiplocs = session.query(Tiploc).all()
 
-tiploc_list = {}
+# tiploc_list = {}
 
-for row in tiplocs:
-	tiploc_list[row.tiploc] = row
+# for row in tiplocs:
+# 	tiploc_list[row.tiploc] = row
 
-# Get stanox lists
-stanoxs = session.query(Tiploc).all()
+# # Get stanox lists
+# stanoxs = session.query(Tiploc).all()
 
-stanox_list = {}
+# stanox_list = {}
 
-for row in stanoxs:
-	if stanox_list.get(row.stanox, None) is None:
-		stanox_list[row.stanox] = []
-	stanox_list[row.stanox].append(row)
+# for row in stanoxs:
+# 	if stanox_list.get(row.stanox, None) is None:
+# 		stanox_list[row.stanox] = []
+# 	stanox_list[row.stanox].append(row)
 
-steve_list = {}
-schedules_used = []
+# steve_list = {}
+# schedules_used = []
 
 class HelloWorld(object):
 	
@@ -98,22 +98,34 @@ class HelloWorld(object):
 	@cherrypy.expose
 	def train(self, train_uid, date = datetime.now().strftime("%Y-%m-%d"), all_points = False, all_times = False, format = None):
 
-		runs_day = 'runs_' + datetime.strptime(date, "%Y-%m-%d").strftime('%A').lower()[0:2]
-		runs = {runs_day: True}
+		# runs_day = 'runs_' + datetime.strptime(date, "%Y-%m-%d").strftime('%A').lower()[0:2]
+		# runs = {runs_day: True}
+
+		# train = session.query(
+		# 					Location
+		# 				).filter_by(
+		# 					train_uid = train_uid
+		# 				).filter(
+		# 					Location.start_date <= date, Location.end_date >= date
+		# 				).filter_by(
+		# 					**runs
+		# 				).order_by(
+		# 					Location.order, Location.stp_indicator
+		# 				).all()
 
 		train = session.query(
-							Location
+							StopTime
 						).filter_by(
-							train_uid = train_uid
-						).filter(
-							Location.start_date <= date, Location.end_date >= date
-						).filter_by(
-							**runs
-						).order_by(
-							Location.order, Location.stp_indicator
+							trip_id = train_uid
+						# ).filter(
+						# 	Location.start_date <= date, Location.end_date >= date
+						# ).filter_by(
+						# 	**runs
+						# ).order_by(
+						# 	Location.order, Location.stp_indicator
 						).all()
 
-		return Template(open('train.html', 'r').read()).render(train = train, all_points = all_points, all_times = all_times)
+		return Template(open('train.html', 'r').read()).render(train = train)#, all_points = all_points, all_times = all_times)
 
 
 

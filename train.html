@@ -26,10 +26,10 @@
 
 		<div class="container">
 			<h1 class="flipsign">
-				${train[0].departure.strftime('%H:%M')}
+				${train[0].departure_time.strftime('%H:%M')}
 			</h1>
 			<h1 class="flipsign">
-				${train[len(train) - 1].tiploc.tps_description}
+				${train[len(train) - 1].stop.stop_name}
 			</h1>
 			
 
@@ -39,13 +39,8 @@
 				<thead>
 					<tr>
 						<th>Location</th>
-						% if all_times:
-							<th>Arrival</th>
-							<th>Departure</th>
-							<th>Pass</th>
-						% else:
-							<th>Time</th>
-						% endif
+						<th>Arrival</th>
+						<th>Departure</th>
 						<th>Platform</th>
 						<th>Line</th>
 						<th></th>
@@ -53,25 +48,13 @@
 				</thead>
 				<tbody>
 					% for point in train:
-						% if all_points or point.pass_time is None:
-						<tr
-							% if point.pass_time is not None:
-								class="muted" 
-							% endif
-						>
-							<td>${point.tiploc.tps_description}</td>
-							% if all_times:
-								<td>${str(point.arrival).replace('None', '-')}</td>
-								<td>${str(point.departure).replace('None', '-')}</td>
-								<td>${str(point.pass_time).replace('None', '-')}</td>
-							% else:
-								<td>${str(point.sort_time).replace('None', '-')}</td>
-							% endif
+						<tr>
+							<td>${point.stop.stop_name}</td>
+							<td>${str(point.arrival_time).replace('None', '-')}</td>
+							<td>${str(point.departure_time).replace('None', '-')}</td>
 							<td>${str(point.platform).replace('None', '-')}</td>
 							<td>${str(point.line).replace('None', '-')}</td>
-
 						</tr>
-						% endif
 					% endfor
 				</tbody>
 			</table>
