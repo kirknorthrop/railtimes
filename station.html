@@ -46,14 +46,13 @@
 				<tbody>
 					% for train in trains:
 						<tr>
-							<td>${train.origin.tps_description}</td>
-							<td>${train.destination.tps_description}</td>
-							<td>${train.arrival}</td>
-							<td>${train.pass_time}</td>
-							<td>${train.departure}</td>
+							<td>${train}</td>
+							<td>${train}</td>
+							<td>${train.arrival_time}</td>
+							<td>${train.departure_time}</td>
 							<td>${train.platform}</td>
 							<td>${train.line}</td>
-							<td><a href="/train/${train.train_uid}/">View train</a></td>
+							<td><a href="/train/${train.trip_id}/">View train</a></td>
 						</tr>
 					% endfor
 				</tbody>

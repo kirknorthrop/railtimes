@@ -81,7 +81,7 @@ cherrypy.config.update({'server.socket_host': '0.0.0.0',
 # steve_list = {}
 # schedules_used = []
 
-class HelloWorld(object):
+class Railtimes(object):
 	
 	@cherrypy.expose
 	def index(self):
@@ -100,18 +100,6 @@ class HelloWorld(object):
 
 		# runs_day = 'runs_' + datetime.strptime(date, "%Y-%m-%d").strftime('%A').lower()[0:2]
 		# runs = {runs_day: True}
-
-		# train = session.query(
-		# 					Location
-		# 				).filter_by(
-		# 					train_uid = train_uid
-		# 				).filter(
-		# 					Location.start_date <= date, Location.end_date >= date
-		# 				).filter_by(
-		# 					**runs
-		# 				).order_by(
-		# 					Location.order, Location.stp_indicator
-		# 				).all()
 
 		train = session.query(
 							StopTime
@@ -261,8 +249,9 @@ class HelloWorld(object):
 
 
 
-	# Takes either a STANOX or a TIPLOC. Will merge all under the STANOX.
-	# If you just want location, use location! 
+	# Takes a CRS code and converts this to NaPTAN/Traveline stop codes
+	# This is OK cause the GTFS dataset we are using does not include all the
+	# Junctions and so forth we get in the normal feed.
 	@cherrypy.expose
 	def station(self, stanox, start_time = None, end_time = None, date = None, format = None):
 
@@ -276,32 +265,28 @@ class HelloWorld(object):
 		if date is None:
 			date = datetime.now().strftime("%Y-%m-%d")
 
+		stops = session.query(
+								Stop
+							).filter(
+								Stop.parent_station == stanox
+							).all()
 		
-		
-
-
-		# If it's a TIPLOC, we need to convert to a STANOX
-		if not stanox.isdigit():
-			stanox = tiploc_list[stanox].stanox
-		
-		# Get all the TIPLOCs for that STANOX
-		tiplocs = stanox_list[stanox]
 
 		runs_day = 'runs_' + datetime.strptime(date, "%Y-%m-%d").strftime('%A').lower()[0:2]
 		runs = {runs_day: True}
 
 		locations = session.query(
-								Location
+								StopTime
 							).filter(
-								Location.tiploc_id.in_([t.tiploc for t in tiplocs])
+								StopTime.stop_id.in_([stop.stop_id for stop in stops])
 							).filter(
-								Location.sort_time.between(start_time, end_time)
-							).filter(
-								Location.start_date <= date, Location.end_date >= date
-							).filter_by(
-								**runs
-							).order_by(
-								Location.sort_time
+								StopTime.arrival_time.between(start_time, end_time)
+							# ).filter(
+							# 	StopTime.trip.service.start_date <= date, StopTime.trip.service.end_date >= date
+							# ).filter_by(
+							# 	**runs
+							# ).order_by(
+							# 	StopTime.sort_time
 							).all()
 
 		# trains_to_render = []
@@ -420,8 +405,8 @@ class HelloWorld(object):
 
 #Daemonizer(cherrypy.engine).subscribe()
 
-#cherrypy.tree.mount(HelloWorld(), "/")
+#cherrypy.tree.mount(Railtimes(), "/")
 #cherrypy.engine.start()
 #cherrypy.engine.block()
 
-cherrypy.quickstart(HelloWorld())
+cherrypy.quickstart(Railtimes())
