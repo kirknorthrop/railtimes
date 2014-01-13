@@ -26,7 +26,7 @@
 
 		<div class="container">
 			<h1 class="flipsign">
-				station.tps_description
+				${station.stop_name}
 			</h1>
 
 		
@@ -36,22 +36,19 @@
 						<th>Origin</th>
 						<th>Destination</th>
 						<th>Arrival</th>
-						<th>Pass</th>
 						<th>Departure</th>
 						<th>Platform</th>
-						<th>Line</th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
 					% for train in trains:
 						<tr>
-							<td>${train}</td>
-							<td>${train}</td>
+							<td>${train.trip.route.route_long_name.split(' to ')[0]}</td>
+							<td>${train.trip.route.route_long_name.split(' to ')[1]}</td>
 							<td>${train.arrival_time}</td>
 							<td>${train.departure_time}</td>
 							<td>${train.platform}</td>
-							<td>${train.line}</td>
 							<td><a href="/train/${train.trip_id}/">View train</a></td>
 						</tr>
 					% endfor
@@ -59,6 +56,5 @@
 			</table>
 		</div>
 			<script src="http://code.jquery.com/jquery-latest.js"></script>
-			<script src="http://railtim.es/test/bootstrap/js/bootstrap.min.js"></script>
 		</body>
 </html>
