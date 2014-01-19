@@ -48,7 +48,7 @@
 							<td>${train.trip.route.route_long_name.split(' to ')[1]}</td>
 							<td>${train.arrival_time}</td>
 							<td>${train.departure_time}</td>
-							<td>${train.platform}</td>
+							<td>${str(train.platform).replace('0', '-')}</td>
 							<td><a href="/train/${train.trip_id}/">View train</a></td>
 						</tr>
 					% endfor

@@ -38,7 +38,7 @@ class Link(Base):
 	__tablename__ = u'links'
 
 	id = Column(Integer(), primary_key=True, index=True)
-	mode = Column(String(255), primary_key=True, index=True)
+	mode = Column(String(255))
 	from_stop_id = Column(String(255))
 	to_stop_id = Column(String(255))
 	link_secs = Column(Integer())

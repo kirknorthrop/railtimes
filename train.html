@@ -49,7 +49,7 @@
 							<td>${point.stop.stop_name}</td>
 							<td>${str(point.arrival_time).replace('None', '-')}</td>
 							<td>${str(point.departure_time).replace('None', '-')}</td>
-							<td>${str(point.platform).replace('None', '-')}</td>
+							<td>${str(point.platform).replace('0', '-')}</td>
 							<td>${str(point.line).replace('None', '-')}</td>
 						</tr>
 					% endfor
