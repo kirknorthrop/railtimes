@@ -50,7 +50,7 @@ class Railtimes(object):
 	
 	@cherrypy.expose
 	def index(self):
-		pass
+		raise cherrypy.HTTPRedirect('/station/HHE')
 		# #return "Hello world!"
 		# import timeit
 		# #print(timeit.timeit("station('HYWRDSH')", setup=""))
