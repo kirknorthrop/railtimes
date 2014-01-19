@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from model import Base, Agency, Calendar, Link, Route, StopTime, Stop, Transfer, Trip
 
 from sqlalchemy import create_engine, not_
@@ -227,7 +228,7 @@ class Railtimes(object):
 		cherrypy.response.headers['Content-Type']= 'text/json'	
 		return json.dumps(ret_val, cls=DateHandler)
 
-def run_daemon:
+def run_daemon():
 
 	cherrypy.config.update({'server.socket_host': '127.0.0.1',
 							'server.socket_port': 8010,
@@ -247,8 +248,8 @@ if __name__ == '__main__':
 	}
 
 	# Check if there are any args?
-	if len(sys.argv) > 0:
-		options[sys.argv[0]]()
+	if len(sys.argv) > 1:
+		options[sys.argv[1]]()
 
 	else:
 		# Run the test server
