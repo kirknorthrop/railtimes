@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import DeclarativeMeta
 
 import json
+import sys
 from string import capwords
 from datetime import datetime, timedelta, date, time
 from types import *
@@ -40,10 +41,6 @@ engine = create_engine(settings.DB_STRING) #, echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 #Base.metadata.create_all(engine) 
-
-cherrypy.config.update({'server.socket_host': '0.0.0.0',
-						'server.socket_port': 8080,
-					   })
 
 
 class Railtimes(object):
@@ -230,10 +227,33 @@ class Railtimes(object):
 		cherrypy.response.headers['Content-Type']= 'text/json'	
 		return json.dumps(ret_val, cls=DateHandler)
 
-#Daemonizer(cherrypy.engine).subscribe()
+def run_daemon:
 
-#cherrypy.tree.mount(Railtimes(), "/")
-#cherrypy.engine.start()
-#cherrypy.engine.block()
+	cherrypy.config.update({'server.socket_host': '127.0.0.1',
+							'server.socket_port': 8010,
+						   })
 
-cherrypy.quickstart(Railtimes())
+	Daemonizer(cherrypy.engine).subscribe()
+
+	cherrypy.tree.mount(Railtimes(), "/")
+	cherrypy.engine.start()
+	cherrypy.engine.block()
+
+
+if __name__ == '__main__':
+
+	options = {
+		'daemon': run_daemon
+	}
+
+	# Check if there are any args?
+	if len(sys.argv) > 0:
+		options[sys.argv[0]]()
+
+	else:
+		# Run the test server
+		cherrypy.config.update({'server.socket_host': '0.0.0.0',
+						'server.socket_port': 8080,
+					   })
+
+		cherrypy.quickstart(Railtimes())
