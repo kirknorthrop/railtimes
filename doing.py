@@ -7,6 +7,7 @@ from sqlalchemy.ext.declarative import DeclarativeMeta
 
 import json
 import sys
+import os
 from string import capwords
 from datetime import datetime, timedelta, date, time
 from types import *
@@ -81,7 +82,7 @@ class Railtimes(object):
 							StopTime.departure_time
 						).all()
 
-		return Template(open('train.html', 'r').read()).render(train = train)
+		return Template(open(os.path.join(settings.TEMPLATE_PATH, 'train.html'), 'r').read()).render(train = train)
 
 
 	# Takes a CRS code and converts this to NaPTAN/Traveline stop codes
@@ -131,7 +132,7 @@ class Railtimes(object):
 
 		if format is None:
 			pass
-			return Template(open('station.html', 'r').read()).render(trains = locations, station = stops[0])
+			return Template(open(os.path.join(settings.TEMPLATE_PATH, 'station.html'), 'r').read()).render(trains = locations, station = stops[0])
 		elif format.upper() == "JSON":
 			#MIME Type
 			cherrypy.response.headers['Content-Type']= 'text/json'	
